@@ -112,7 +112,7 @@ namespace Tax0r_Comboleecher
             Console.WriteLine("[Information]: New Combo's found: " + scrapedCombos.Count(), Color.LightBlue);
             Console.WriteLine("[Information]: Distinct Combo's found: " + distinctCombos.Count(), Color.LightPink);
 
-            fileHelper.saveToFile(distinctCombos.ToArray(), distinctCombos.Count());
+            if(distinctCombos.Count() > 0) fileHelper.saveToFile(distinctCombos.ToArray(), distinctCombos.Count());
 
             Console.WriteLine("\npress any key to exit the process...", Color.White);
             Console.ReadKey();

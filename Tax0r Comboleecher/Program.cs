@@ -46,7 +46,7 @@ namespace Tax0r_Comboleecher
                 Console.WriteLine(filter, Color.LightYellow);
             }
 
-            Thread.Sleep(TimeSpan.FromSeconds(4));
+            Thread.Sleep(TimeSpan.FromSeconds(2));
 
             Console.Clear();
             Console.WriteLine("[Important!]: PRESS ESC TO INTERRUPT AND FINISH INSTANTLY.", Color.LightBlue);
@@ -60,13 +60,14 @@ namespace Tax0r_Comboleecher
             string[] urls = fileHelper.readUrlsFromFile(input);
             List<string> scrapedCombos = new List<string>();
             List<string> urlsDone = new List<string>();
+            List<string> fails = new List<string>();
 
             totalLinks = mathHelper.GetAmount(urls);
             consoleHelper.SetConsoleTitle("Comboleecher v" + version + " - Tax0r 2020 | " + finishedLinks + "/" + totalLinks + " URL's - " + combos + " Combo's");
 
             foreach (string url in urls)
             {
-                if (filterHelper.Filtered(url))
+                if (filterHelper.Filtered(url, fails))
                 {
                     try
                     {
@@ -80,6 +81,8 @@ namespace Tax0r_Comboleecher
 
                         string[] foundCombos = comboFinder.GetCombos(content);
 
+                        if (foundCombos.Length < 1) fails.Add(url);
+
                         foreach (string foundCombo in foundCombos)
                         {
                             Console.WriteLine("[NEW COMBO]: " + foundCombo + " | " + url, Color.LightGreen);
@@ -92,11 +95,13 @@ namespace Tax0r_Comboleecher
                     catch (Exception e)
                     {
                         Console.WriteLine("[BAD URL]: " + url, Color.Red);
+                        fails.Add(url);
                     }
                 }
                 else
                 {
                     Console.WriteLine("[BAD URL]: " + url, Color.Red);
+                    fails.Add(url);
                 }
             }
 
@@ -110,7 +115,7 @@ namespace Tax0r_Comboleecher
             fileHelper.saveToFile(distinctCombos.ToArray(), distinctCombos.Count());
 
             Console.WriteLine("\npress any key to exit the process...", Color.White);
-            Console.ReadKey(true);
+            Console.ReadKey();
         }
     }
 }
